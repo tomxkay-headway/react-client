@@ -58,7 +58,7 @@ const Url = () => {
     <>
       <Box sx={{ background: "#263849", p: 5 }}>
         <Grid container justifyContent="center" spacing={1}>
-          <Grid item xs={12} sm={12} md={8}>
+          <Grid item xs={12} sm={12} md={8} align="right">
             <TextField
               sx={{ mr: 1, background: "#fff", height: "50px" }}
               label=""
@@ -86,6 +86,14 @@ const Url = () => {
             </Button>
           </Grid>
         </Grid>
+        <Typography
+          align="center"
+          sx={{ mt: 2, color: "#fff" }}
+          variant="body2"
+        >
+          By clicking shorten, you agree to Rebrandy's Terms of Use and Privacy
+          Policy
+        </Typography>
       </Box>
       <Box>
         {queryLoading ? (

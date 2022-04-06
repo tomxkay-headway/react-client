@@ -8,12 +8,14 @@ import Footer from "./components/footer";
 
 export default function App() {
   return (
-    <Container>
-      <Nav />
-      <Hero />
-      <Url />
-      <Tool />
+    <>
+      <Container>
+        <Nav />
+        <Hero />
+        <Url />
+        <Tool />
+      </Container>
       <Footer />
-    </Container>
+    </>
   );
 }

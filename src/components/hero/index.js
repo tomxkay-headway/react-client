@@ -3,8 +3,8 @@ import personPhoto from "../../../assets/person.png";
 
 const Hero = () => {
   return (
-    <Box sx={{ height: "80vh" }}>
-      <Grid container>
+    <Box sx={{ minHeight: "60vh" }}>
+      <Grid container alignItems="center">
         <Grid item sm={6}>
           <Box
             sx={{
@@ -17,11 +17,13 @@ const Hero = () => {
               <Typography variant="h4" sx={{ color: "#212732" }}>
                 Your Bran on Your Links
               </Typography>
-              <Typography variant="body2" sx={{ color: "#595d66" }}>
+              <Typography variant="body2" sx={{ my: 3, color: "#595d66" }}>
                 Rebrandly is the industry-leading management platform to brand,
                 track and share short URLs using a custom domain name
               </Typography>
-              <Button variant="contained">Sign up free</Button>
+              <Button sx={{ mr: 2 }} variant="contained">
+                Sign up free
+              </Button>
               <Button variant="outlined">Request a demo</Button>
             </Box>
           </Box>
