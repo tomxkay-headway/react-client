@@ -1,6 +1,7 @@
-import { Box, Button, Container, Grid, Stack, TextField } from "@mui/material";
+import { useState } from "react";
+import { Box, Button, Container, Grid, TextField } from "@mui/material";
 
-// import { useQuery, gql } from "@apollo/client";
+import { useQuery, useMutation, gql } from "@apollo/client";
 
 // const GET_ALL_LINKS = gql`
 //   query GetAllLinks {
@@ -12,7 +13,7 @@ import { Box, Button, Container, Grid, Stack, TextField } from "@mui/material";
 //   }
 // `;
 
-const data = {
+const mockData = {
   allLinks: [
     {
       id: 1,
@@ -27,11 +28,45 @@ const data = {
   ]
 };
 
+const CREATE_LINK = gql`
+  mutation CreateLink($url: String!, $slug: String!) {
+    createLink(url: $url, slug: $slug) {
+      url
+      slug
+      id
+    }
+  }
+`;
+
 const Url = () => {
+  const [url, setUrl] = useState("");
+  const [slug, setSlug] = useState("");
+
   // const { loading, error, data } = useQuery(GET_ALL_LINKS);
+  const [
+    createLink,
+    { data: mutationData, loading: mutationLoading, error: mutationError }
+  ] = useMutation(CREATE_LINK);
 
   // if (loading) return <p>loading...</p>;
   // if (error) return <p>error</p>;
+
+  const reset = () => {
+    setUrl("");
+    setSlug("");
+  };
+
+  const handleShortUrl = async () => {
+    // call mutation hook and create link
+    const res = await createLink({ variables: { url, slug } });
+    console.log("mutationLoading", mutationLoading);
+    console.log("mutationData", mutationData);
+    console.log("mutationError", mutationError);
+
+    console.log("res", res);
+
+    reset();
+  };
 
   return (
     <Container>
@@ -41,18 +76,26 @@ const Url = () => {
             <TextField
               sx={{ mr: 1, background: "#fff", height: "50px" }}
               label=""
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
               variant="outlined"
               placeholder="Make your links shorter"
             />
             <TextField
               sx={{ background: "#fff", height: "50px" }}
               label=""
+              value={slug}
+              onChange={(e) => setSlug(e.target.value)}
               variant="outlined"
               placeholder="Custom slug"
             />
           </Grid>
           <Grid item xs={12} sm={12} md={4}>
-            <Button sx={{ height: "50px" }} variant="contained">
+            <Button
+              sx={{ height: "50px" }}
+              variant="contained"
+              onClick={handleShortUrl}
+            >
               Shorten URL
             </Button>
           </Grid>
@@ -60,7 +103,7 @@ const Url = () => {
       </Box>
       <Box>
         <div className="App">
-          {data.allLinks.map((link) => {
+          {mockData.allLinks.map((link) => {
             return <div key={link.id}>{link.url}</div>;
           })}
         </div>
