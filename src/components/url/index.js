@@ -1,32 +1,17 @@
 import { useState } from "react";
-import { Box, Button, Container, Grid, TextField } from "@mui/material";
+import { Box, Button, Grid, TextField, Stack, Typography } from "@mui/material";
 
 import { useQuery, useMutation, gql } from "@apollo/client";
 
-// const GET_ALL_LINKS = gql`
-//   query GetAllLinks {
-//     allLinks {
-//       id
-//       url
-//       slug
-//     }
-//   }
-// `;
-
-const mockData = {
-  allLinks: [
-    {
-      id: 1,
-      url: "test url 1",
-      slug: "test slug 1"
-    },
-    {
-      id: 2,
-      url: "test url 2",
-      slug: "test slug 2"
+const GET_ALL_LINKS = gql`
+  query QueryLinks {
+    allLinks {
+      id
+      url
+      slug
     }
-  ]
-};
+  }
+`;
 
 const CREATE_LINK = gql`
   mutation CreateLink($url: String!, $slug: String!) {
@@ -42,14 +27,16 @@ const Url = () => {
   const [url, setUrl] = useState("");
   const [slug, setSlug] = useState("");
 
-  // const { loading, error, data } = useQuery(GET_ALL_LINKS);
+  const {
+    loading: queryLoading,
+    error: queryError,
+    data: queryData
+  } = useQuery(GET_ALL_LINKS);
+
   const [
     createLink,
     { data: mutationData, loading: mutationLoading, error: mutationError }
   ] = useMutation(CREATE_LINK);
-
-  // if (loading) return <p>loading...</p>;
-  // if (error) return <p>error</p>;
 
   const reset = () => {
     setUrl("");
@@ -58,18 +45,17 @@ const Url = () => {
 
   const handleShortUrl = async () => {
     // call mutation hook and create link
-    const res = await createLink({ variables: { url, slug } });
+    await createLink({ variables: { url, slug } });
+
     console.log("mutationLoading", mutationLoading);
     console.log("mutationData", mutationData);
     console.log("mutationError", mutationError);
-
-    console.log("res", res);
 
     reset();
   };
 
   return (
-    <Container>
+    <>
       <Box sx={{ background: "#263849", p: 5 }}>
         <Grid container justifyContent="center" spacing={1}>
           <Grid item xs={12} sm={12} md={8}>
@@ -102,13 +88,34 @@ const Url = () => {
         </Grid>
       </Box>
       <Box>
-        <div className="App">
-          {mockData.allLinks.map((link) => {
-            return <div key={link.id}>{link.url}</div>;
-          })}
-        </div>
+        {queryLoading ? (
+          <Typography>Loading...</Typography>
+        ) : (
+          <div>
+            {queryData.allLinks.map((link) => {
+              return (
+                <Grid container key={link.id}>
+                  <Grid item xs={6}>
+                    <Box>
+                      <Typography align="right">{link.url}</Typography>
+                    </Box>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Stack direction="row">
+                      <Box
+                        component="span"
+                        sx={{ ml: 3, width: "50px" }}
+                      >{`-->`}</Box>
+                      <Typography>{`https://hdwy.link/${link.slug}`}</Typography>
+                    </Stack>
+                  </Grid>
+                </Grid>
+              );
+            })}
+          </div>
+        )}
       </Box>
-    </Container>
+    </>
   );
 };
 
